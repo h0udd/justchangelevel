@@ -1,0 +1,32 @@
+{
+  "ground": {
+    "img_path": "ground",
+    "hero": "160,112",
+    "showSky": true,
+    "useCamera": true,
+    "fullscreenBackground": false,
+    "walls": [
+      "64,48",
+      "64,64",
+      "64,80",
+      "80,64",
+      "80,80",
+      "112,80",
+      "128,80",
+      "144,80",
+      "160,80"
+    ]
+  },
+  "underground": {
+    "img_path": "underground",    
+    "showSky": false,
+    "useCamera": false,
+    "fullscreenBackground": true,
+    "hero": "128,32",
+    "walls": [
+      "32,32",
+      "48,32",
+      "64,32"
+    ]
+  }
+}
