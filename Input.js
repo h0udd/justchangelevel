@@ -25,7 +25,11 @@ export class Input {
           
             if (e.code === "KeyQ") {
              //console.log("QQQqqq");
-             events.emit("CHANGE_LEVEL_REQUESTED");
+             events.emit("CHANGE_LEVEL_REQUESTED",{name :"ground"});
+             }
+              if (e.code === "KeyE") {
+             //console.log("EEEE");
+             events.emit("CHANGE_LEVEL_REQUESTED",{name :"underground"});
              }
         });
 

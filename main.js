@@ -48,8 +48,8 @@ const camera = new Camera();
 mainScene.addChild(camera);
 
 
-const rod = new Rod(gridCalls(7),gridCalls(6));
-mainScene.addChild(rod);
+//const rod = new Rod(gridCalls(7),gridCalls(6));
+//mainScene.addChild(rod);
 
 
 const inventory = new Inventory();
@@ -81,13 +81,17 @@ const draw = () => {
 }
 
 //change lebel------------------- 
-
-const levelOrder = ["ground", "underground"/* ...level name*/];
-let currentLevelIndex = 0;
-let currentLevelName = levelOrder[currentLevelIndex];
+ 
+let currentLevelName = "ground";
 let currentLevelObject = null;
+let currentObjects = [];
 let currentShowSky = true;
 let currentUseCamera = true;
+
+
+const objectFactories = {
+    rod: (x, y) => new Rod(x, y),
+};
 
 function loadLevel(levelName) {
     const levelInfo = levelData[levelName];
@@ -122,23 +126,36 @@ function loadLevel(levelName) {
     walls.clear();
     if (levelInfo.walls) {
         levelInfo.walls.forEach(wallCoord => walls.add(wallCoord));
-    }
 
+//ADD OBJJJ
+           
+    currentObjects.forEach(obj => {
+        obj.destroy();
+        mainScene.children = mainScene.children.filter(c => c !== obj);
+    });
+    currentObjects = [];
+
+    if (levelInfo.objects) {
+        levelInfo.objects.forEach(objData => {
+            const [ox, oy] = objData.position.split(",").map(Number);
+            const factory = objectFactories[objData.name];
+            if (!factory) {
+                console.warn(`no object named : ${objData.name}`);
+                return;
+            }
+            const newObj = factory(ox, oy);
+            mainScene.addChild(newObj);
+            currentObjects.push(newObj);
+        });
+    }
+    }
 mainScene.addChild(currentLevelObject);
 mainScene.children = [currentLevelObject, ...mainScene.children.filter(c => c !== currentLevelObject)];}
 
 loadLevel("ground");
 
-events.on("CHANGE_LEVEL_REQUESTED", null, () => {
-    currentLevelIndex = (currentLevelIndex + 1) % levelOrder.length;
-   /* 
-    0+1 % 3 = 1
-    1+1 % 3 = 2
-    2+1 % 3 = 0
-
-    */
-    currentLevelName = levelOrder[currentLevelIndex];
-    console.log(currentLevelName);
+events.on("CHANGE_LEVEL_REQUESTED", null, (level) => {
+   currentLevelName=level.name;
     loadLevel(currentLevelName);
 });
 
